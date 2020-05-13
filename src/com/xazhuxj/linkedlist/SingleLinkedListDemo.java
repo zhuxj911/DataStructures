@@ -1,4 +1,5 @@
 package com.xazhuxj.linkedlist;
+
 import java.util.Stack;
 
 /**
@@ -13,20 +14,20 @@ public class SingleLinkedListDemo {
         HeroNode heroNode1 = new HeroNode(1, "宋江", "天魁星·及时雨");
         HeroNode heroNode2 = new HeroNode(2, "卢俊义", "天罡星·玉麒麟");
         HeroNode heroNode3 = new HeroNode(3, "吴用", "天机星·智多星");
-        HeroNode heroNode6 = new HeroNode(6, "林冲", "天雄星·豹子头");
         HeroNode heroNode4 = new HeroNode(4, "公孙胜", "天闲星·入云龙");
         HeroNode heroNode5 = new HeroNode(5, "关胜", "天勇星·大刀");
+        HeroNode heroNode6 = new HeroNode(6, "林冲", "天雄星·豹子头");
         HeroNode heroNode7 = new HeroNode(7, "秦明", "天猛星·霹雳火");
         HeroNode heroNode8 = new HeroNode(8, "呼延灼", "天威星·双鞭将");
         HeroNode heroNode9 = new HeroNode(9, "花荣", "天英星·小李广");
         HeroNode heroNode10 = new HeroNode(10, "柴进", "天贵星·小旋风");
         HeroNode heroNode11 = new HeroNode(11, "李应", "天富星·扑天雕");
         HeroNode heroNode12 = new HeroNode(12, "朱仝", "天满星·美髯公");
+        HeroNode heroNode13 = new HeroNode(13, "鲁智深", "天孤星·花和尚");
         HeroNode heroNode14 = new HeroNode(14, "武松", "天伤星·行者");
         HeroNode heroNode17 = new HeroNode(17, "杨志", "天暗星·青面兽");
-        HeroNode heroNode22 = new HeroNode(22, "李逵", "天杀星·黑旋风");
         HeroNode heroNode20 = new HeroNode(20, "戴宗", "天速星·神行太保");
-        HeroNode heroNode13 = new HeroNode(13, "鲁智深", "天孤星·花和尚");
+        HeroNode heroNode22 = new HeroNode(22, "李逵", "天杀星·黑旋风");
 
         SingleLinkedList singleLinkedList = new SingleLinkedList();
 
@@ -41,19 +42,19 @@ public class SingleLinkedListDemo {
         singleLinkedList.addByOrder(heroNode8);
         singleLinkedList.addByOrder(heroNode17);
         singleLinkedList.addByOrder(heroNode3);
-        singleLinkedList.addByOrder(heroNode22);
         singleLinkedList.addByOrder(heroNode20);
         singleLinkedList.addByOrder(heroNode13);
+        singleLinkedList.addByOrder(heroNode5);
+        singleLinkedList.addByOrder(heroNode11);
 
         SingleLinkedList otherSingleLinkedList = new SingleLinkedList();
+        otherSingleLinkedList.addByOrder(heroNode22);
         otherSingleLinkedList.addByOrder(heroNode12);
         otherSingleLinkedList.addByOrder(heroNode4);
-        otherSingleLinkedList.addByOrder(heroNode5);
         otherSingleLinkedList.addByOrder(heroNode10);
         otherSingleLinkedList.addByOrder(heroNode7);
         otherSingleLinkedList.addByOrder(heroNode2);
         otherSingleLinkedList.addByOrder(heroNode9);
-        otherSingleLinkedList.addByOrder(heroNode11);
 
         System.out.println("~~~~~合并前的链表情况~~~~~：");
         System.out.println("~~~~~链表1：~~~~~：");
@@ -61,9 +62,8 @@ public class SingleLinkedListDemo {
         System.out.println("~~~~~链表2：~~~~~：");
         otherSingleLinkedList.list();
         System.out.println("~~~~~合并后的链表：~~~~~：");
-        SingleLinkedList mergeSingleLinkedList;
-        mergeSingleLinkedList = singleLinkedList.mergeOrderSingleLinkedList(otherSingleLinkedList);
-        mergeSingleLinkedList.list();
+        singleLinkedList.mergeOrderList(otherSingleLinkedList);
+        singleLinkedList.list();
 
 //        singleLinkedList.addByOrder(heroNode3);
 //        System.out.println("~~~~~修改前的的链表情况~~~~~：");
@@ -148,9 +148,9 @@ class SingleLinkedList {
             }
             temp = temp.next;
         }
-        if(flag){ //不能添加，说明编号存在
+        if (flag) { //不能添加，说明编号存在
             System.out.printf("准备插入的英雄编号 %d 已经存在，不能加入\n", heroNode.no);
-        }else{
+        } else {
             //插入到链表中，temp的后面
             heroNode.next = temp.next;
             temp.next = heroNode;
@@ -160,10 +160,11 @@ class SingleLinkedList {
 
     /**
      * 修改节点的信息， 根据no编号修改，即no编号不能改
+     *
      * @param newHeroNode
      */
-    public void update(HeroNode newHeroNode){
-        if (head.next == null){
+    public void update(HeroNode newHeroNode) {
+        if (head.next == null) {
             System.out.println("链表为空~~");
             return;
         }
@@ -171,18 +172,18 @@ class SingleLinkedList {
         //定义一个辅助变量
         HeroNode temp = head.next;
         boolean flag = false;
-        while (true){
-            if(temp == null) break;
-            if(temp.no == newHeroNode.no){
+        while (true) {
+            if (temp == null) break;
+            if (temp.no == newHeroNode.no) {
                 flag = true;
                 break;
             }
             temp = temp.next; //循环后移
         }
-        if(flag){
+        if (flag) {
             temp.name = newHeroNode.name;
             temp.nickname = newHeroNode.nickname;
-        }else{
+        } else {
             System.out.printf("没有找到编号 %d 的节点，不能修改\n", newHeroNode.no);
         }
     }
@@ -190,28 +191,28 @@ class SingleLinkedList {
 
     /**
      * 删除节点
-     *从单链表中删除一个节点的 思路
-     *
+     * 从单链表中删除一个节点的 思路
+     * <p>
      * 1. 我们先找到需要删除的这个节点的前一个节点temp（指向待删除节点的前一个节点）
      * 2. head 不能动，因此需要一个temp辅助节点找到节点前一个节点
      */
-    public void del(int no){
+    public void del(int no) {
         HeroNode temp = head;
         boolean flag = false;
-        while (true){
-            if(temp.next == null) { //已经到链表的最后
+        while (true) {
+            if (temp.next == null) { //已经到链表的最后
                 break;
             }
-            if(temp.next.no == no){
+            if (temp.next.no == no) {
                 flag = true;
                 break;
             }
             temp = temp.next; //后一，遍历
         }
 
-        if(flag) {
+        if (flag) {
             temp.next = temp.next.next;
-        }else{
+        } else {
             System.out.println("要删除的节点不存在！");
         }
 
@@ -243,10 +244,10 @@ class SingleLinkedList {
         }
     }
 
-    public int size(){
+    public int size() {
         int length = 0;
         HeroNode cur = head.next;
-        while (cur != null){
+        while (cur != null) {
             length++;
             cur = cur.next; //遍历
         }
@@ -263,15 +264,15 @@ class SingleLinkedList {
      * 4. 得到size后，我们从链表的第一个开始遍历（size - index）个，就可以得到
      * 5. 如果找到了，则返回该节点，否则返回null
      */
-    public HeroNode findlastIndexNode(int index){
-        if(head.next == null) return null;
+    public HeroNode findlastIndexNode(int index) {
+        if (head.next == null) return null;
 
         int sz = size();
-        if(index <=0 || index > sz) return null;
+        if (index <= 0 || index > sz) return null;
 
         //定义给辅助变量，for循环定位到倒数的index
         HeroNode cur = head.next;
-        for (int i=0; i<sz-index; i++){
+        for (int i = 0; i < sz - index; i++) {
             cur = cur.next;
         }
         return cur;
@@ -284,13 +285,13 @@ class SingleLinkedList {
      * 2. 从头到尾遍历原来的链表，每遍历一个节点，就将其取出，并放在新的链表reverseHead的最前端
      * 3. 原来的链表的head.next = reverseHead.next
      */
-    public void reverse(){
-        if(head.next == null || head.next.next == null) return;
+    public void reverse() {
+        if (head.next == null || head.next.next == null) return;
 
         HeroNode cur = head.next; //定义辅助的指针，帮助我们遍历原来的链表
-        HeroNode next = null; //指向纺前街店的下一个节点
-        HeroNode reverseHead = new HeroNode(0,"", "");
-        while(cur != null){
+        HeroNode next = null; //指向当前节点的下一个节点
+        HeroNode reverseHead = new HeroNode(0, "", "");
+        while (cur != null) {
             next = cur.next; //先暂时保存当前节点的下一个节点，因为后面要使用
             cur.next = reverseHead.next; //将cur的下一个节点指向新的链表的最前端
             reverseHead.next = cur;
@@ -306,30 +307,70 @@ class SingleLinkedList {
      * 1. 方式一：先将单链表进行翻转，然后在遍历即可，这样的问题是会剖爱原来的单链表的结构，不建议
      * 2. 方式二：可以利用栈这个数据结构，将各个节点压入到栈中，然后利用栈的先进后出的特点，就实现了逆序打印的效果
      */
-    public void reversePrint(){
-        if(head.next == null) return;
+    public void reversePrint() {
+        if (head.next == null) return;
 
         Stack<HeroNode> stack = new Stack<>();
         HeroNode cur = head.next;
-        while (cur != null){
+        while (cur != null) {
             stack.push(cur);
             cur = cur.next;
         }
-        while (stack.size() > 0){
+        while (stack.size() > 0) {
             System.out.println(stack.pop());
         }
     }
 
     /**
-     * 合并两个有序链表，合并之后的链表依然有序
+     * 合并两个有序链表，合并之后的链表依然有序（将另一个有序单向链表合并到当前链表中来）
      * 思路同前：
      * 新生成以一个mergeHead，然后从两个链表中摘取数据进行比较，然后插入
-     * @param singleLinkedList
-     * @return
+     * 本函数：将另一个链表中的数据合并到当前链表中来
+     * DONE, 完成作业
+     * @param otherList 要合并的另一个有序链表
      */
-    public SingleLinkedList mergeOrderSingleLinkedList(SingleLinkedList singleOrderLinkedList){
-        //TODO
-        return null;
+    public void mergeOrderList(SingleLinkedList otherList) {
+        if (otherList == null) return;
+
+        HeroNode mergeHead = new HeroNode(0, "", "");
+        HeroNode curMerge = mergeHead; //记录合并后的当前位置，因为mergeHead不能动
+
+        //分别指示两个链表的当前位置
+        HeroNode cur1 = this.head.next;
+        HeroNode cur2 = otherList.head.next;
+        HeroNode next; //起临时记录当前节点的下一个地址的作用
+        while (cur1 != null && cur2 != null) { //二者均不为空的情况
+            if (cur1.no <= cur2.no) { //不考虑相等的情况
+                next = cur1.next;
+                cur1.next = curMerge.next;
+                curMerge.next = cur1;
+                cur1 = next; //向后遍历
+            } else {
+                next = cur2.next;
+                cur2.next = curMerge.next;
+                curMerge.next = cur2;
+                cur2 = next; //向后遍历
+            }
+            curMerge = curMerge.next; //合并后的位置也需往后移，否则成为前插，变为逆序
+        }
+
+        while (cur1 != null) {//将链表1中的节点直接追加到mergeList中
+            HeroNode next1 = cur1.next;
+            cur1.next = curMerge.next;
+            curMerge.next = cur1;
+            cur1 = next1; //向后遍历
+            curMerge = curMerge.next; //合并后的位置也需往后移，否则成为前插，变为逆序
+        }
+
+
+        while (cur2 != null) {//将链表2中的节点直接追加到mergeList中
+            HeroNode next2 = cur2.next;
+            cur2.next = curMerge.next;
+            curMerge.next = cur2;
+            cur2 = next2;
+            curMerge = curMerge.next; //合并后的位置也需往后移，否则成为前插，变为逆序
+        }
+        head = mergeHead;
     }
 
 }
