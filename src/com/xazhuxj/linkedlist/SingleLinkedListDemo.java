@@ -3,7 +3,6 @@ package com.xazhuxj.linkedlist;
 import java.util.Stack;
 
 /**
- * 使用head头的双向链表实现-水浒英雄排行榜
  * 单向链表的缺点分析：
  * 1） 查找的方向只能是一个方向
  * 2）不能自我删除，需要辅助节点，所以删除节点时， 总是找到temp（temp是待删除节点的前一个节点）的下一个节点来删除的
