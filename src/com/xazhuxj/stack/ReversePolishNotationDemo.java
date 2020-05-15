@@ -136,7 +136,8 @@ class ReversePolishNotation {
         for (String item : ls) {
             if (item.matches("\\d+")) { //3. 遇到数时，将其压入s2
                 s2.add(item);
-            } else if (item.equals("(")) { //5.1 如果是左括号“（”， 则直接压入s1
+            } else if (item.equals("(")) {
+                //5.1 如果是左括号“（”， 则直接压入s1
                 s1.push(item);
             } else if (item.equals(")")) {
                 //5.2 如果是右括号“)”， 则依次弹出s1栈顶的运算符，并压入s2，直到遇到左括号为止，此时将这一对括号丢弃
