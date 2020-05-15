@@ -50,7 +50,8 @@ public class ArrayStackDemo {
 }
 
 /**
- * 数组模拟栈
+ *  数组模拟栈 TODO 还没有实现基于链表的栈操作
+ *
  * @author xazhu
  *
  */
