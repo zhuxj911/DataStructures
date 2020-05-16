@@ -8,11 +8,13 @@ import java.util.regex.Pattern;
 
 public class ReversePolishMultiCalcDemo {
     public static void main(String[] args) {
-        //String math = "9+(3-1)*3+10/2";
         String math = "12.8 + (2 - 3.55)*4+10/5.0"; //8.6
         try {
             ReversePolishMultiCalc rpn = new ReversePolishMultiCalc();
-            rpn.doCalc( rpn.doMatch(math) );
+            List<String> data = rpn.doMatch(math);
+            System.out.println(data);
+            rpn.doCalc( data );
+//            System.out.println(math + " = " + rpn.doCalc( data ));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,8 +57,8 @@ class ReversePolishMultiCalc {
     static final int LEVEL_HIGH = Integer.MAX_VALUE;
 
 
-    Stack<String> stack = new Stack<>();
-    List<String> data = Collections.synchronizedList(new ArrayList<String>());
+    private Stack<String> stack = new Stack<>();
+    private List<String> data = Collections.synchronizedList(new ArrayList<String>());
 
     /**
      * 去除所有空白符
@@ -155,7 +157,6 @@ class ReversePolishMultiCalc {
         Collections.reverse(stack);
         data.addAll(new ArrayList<>(stack));
 
-        System.out.println(data);
         return data;
     }
 
