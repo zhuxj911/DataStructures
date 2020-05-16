@@ -118,7 +118,7 @@ class DoubleLinkedList{
     }
 
     /**
-     * 作业：TODO->DONE
+     * 作业：DONE
      * 添加英雄时，根据排名将英雄插入到指定位置
      * 如果有这个排名，则添加失败，并给出提示     *
      * @param heroNode
