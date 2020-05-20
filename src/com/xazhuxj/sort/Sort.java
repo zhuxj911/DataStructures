@@ -90,7 +90,7 @@ public class Sort {
 //        int temp;
 //        for (int step = arr.length / 2; step > 0; step /= 2) {
 //            for (int i = step; i < arr.length; i++) {
-//                for (int j = i - step; j >= 0; j -= step) {
+//                for (int j = i - step; j >= 0; j -= step) {//此处为交换法,效率不高,导致该方法不可采用
 //                    if (arr[j] > arr[j + step]) {
 //                        temp = arr[j];
 //                        arr[j] = arr[j + step];
@@ -122,6 +122,130 @@ public class Sort {
             }
 //			System.out.println("After shell sort :" + Arrays.toString(arr));
         }
+    }
+
+    /**
+     * 基数排序是桶排序的扩展
+     * 分配式排序(distribution sort or bucker sor or bin sort)
+     * 该方法适用于大于0的整数排序
+     * int arr[] = {53, 3, 542, 748, 14, 214}
+     * @param arr
+     */
+    public static void radixSort(int[] arr) {
+
+        //先得到数组中最大数的位数
+        int max = arr[0];
+        for (int i = 1; i <arr.length ; i++) {
+            if(arr[i] > max){
+                max = arr[i];
+            }
+        }
+        //得到最大数的位数
+        int maxLength = (max + "").length();
+
+        //定义一个二维数组,表示10个桶,每个桶就是一个一维数组
+        //说明
+        //1. 二维数组包含10个一维数组
+        //2. 为了防止在放入数的时候,数据溢出,则每一个一维数组(桶),大小定位arr.length
+        //3.基数排序是使用空间换时间的经典算法
+        int[][] bucket = new int[10][arr.length]; //每行代表一个桶
+
+        int[] bucketElementCounts = new int[10]; //一维数组记录每个桶中每次放入的元素个数
+
+        for(int i=0, n=1; i<maxLength; i++, n*=10) {
+            //第i轮
+            for (int j = 0; j < arr.length; j++) {
+                int digitOfElement = (arr[j]/n) % 10; //对个位数用10求模取余运算,得个位上的数字
+
+                //个位上的数字是几,就放入几号桶,前边的 bucket[digitOfElement] 就是桶
+                // bucketElementCounts[digitOfElement] 表示相应的几号桶的计数器
+                bucket[digitOfElement][bucketElementCounts[digitOfElement]] = arr[j];
+                bucketElementCounts[digitOfElement]++; //记完数后,计数器+1
+            }
+
+            //从桶中取回数据
+            int index = 0; //用于记录数据数组的下标
+            for (int k = 0; k < bucketElementCounts.length; k++) { //轮询每个桶
+                if (bucketElementCounts[k] > 0) { //桶中元素个数是否 >0
+                    for (int l = 0; l < bucketElementCounts[k]; l++) {
+                        arr[index++] = bucket[k][l];//取出桶中所有元素
+                        bucket[k][l] = 0;//桶中数据清除
+                    }
+                    bucketElementCounts[k] = 0;//该桶数据取完,桶的计数也置为0
+                }
+            }
+//            System.out.println("第"+ i+1 + "轮, 对个位的排序处理 arr =" + Arrays.toString(arr));
+        }
+        /*
+        //第1轮
+        for(int j=0; j<arr.length; j++){
+            int digitOfElement = ( arr[j]/1 ) % 10; //对个位数用10求模取余运算,得个位上的数字
+
+            //个位上的数字是几,就放入几号桶,前边的 bucket[digitOfElement] 就是桶
+            // bucketElementCounts[digitOfElement] 表示相应的几号桶的计数器
+            bucket[digitOfElement][bucketElementCounts[digitOfElement]] = arr[j];
+            bucketElementCounts[digitOfElement]++; //记完数后,计数器+1
+        }
+
+        //从桶中取回数据
+        int index = 0; //用于记录数据数组的下标
+        for(int k=0; k<bucketElementCounts.length; k++){ //轮询每个桶
+            if(bucketElementCounts[k] > 0){ //桶中元素个数是否 >0
+                for(int l=0; l<bucketElementCounts[k]; l++){
+                    arr[index++] = bucket[k][l];//取出桶中所有元素
+                    bucket[k][l] =0;//桶中数据清除
+                }
+                bucketElementCounts[k] = 0;//该桶数据取完,桶的计数也置为0
+            }
+        }
+        System.out.println("第1轮, 对个位的排序处理 arr =" + Arrays.toString(arr));
+
+        //第2轮
+        for(int j=0; j<arr.length; j++){
+            int digitOfElement = ( arr[j]/10 ) % 10; //对十位数用10求模取余运算,得个位上的数字
+
+            //个位上的数字是几,就放入几号桶,前边的 bucket[digitOfElement] 就是桶
+            // bucketElementCounts[digitOfElement] 表示相应的几号桶的计数器
+            bucket[digitOfElement][bucketElementCounts[digitOfElement]] = arr[j];
+            bucketElementCounts[digitOfElement]++; //记完数后,计数器+1
+        }
+
+        //从桶中取回数据
+        index = 0; //用于记录数据数组的下标
+        for(int k=0; k<bucketElementCounts.length; k++){ //轮询每个桶
+            if(bucketElementCounts[k] > 0){ //桶中元素个数是否 >0
+                for(int l=0; l<bucketElementCounts[k]; l++){
+                    arr[index++] = bucket[k][l];//取出桶中所有元素
+                    bucket[k][l] =0;//桶中数据清除
+                }
+                bucketElementCounts[k] = 0;//该桶数据取完,桶的计数也置为0
+            }
+        }
+        System.out.println("第2轮, 对个位的排序处理 arr =" + Arrays.toString(arr));
+
+        //第3轮
+        for(int j=0; j<arr.length; j++){
+            int digitOfElement = ( arr[j]/(10*10) ) % 10; //对百位数用10求模取余运算,得个位上的数字
+
+            //个位上的数字是几,就放入几号桶,前边的 bucket[digitOfElement] 就是桶
+            // bucketElementCounts[digitOfElement] 表示相应的几号桶的计数器
+            bucket[digitOfElement][bucketElementCounts[digitOfElement]] = arr[j];
+            bucketElementCounts[digitOfElement]++; //记完数后,计数器+1
+        }
+
+        //从桶中取回数据
+        index = 0; //用于记录数据数组的下标
+        for(int k=0; k<bucketElementCounts.length; k++){ //轮询每个桶
+            if(bucketElementCounts[k] > 0){ //桶中元素个数是否 >0
+                for(int l=0; l<bucketElementCounts[k]; l++){
+                    arr[index++] = bucket[k][l];//取出桶中所有元素
+                    bucket[k][l] =0;//桶中数据清除
+                }
+                bucketElementCounts[k] = 0;//该桶数据取完,桶的计数也置为0
+            }
+        }
+        System.out.println("第3轮, 对个位的排序处理 arr =" + Arrays.toString(arr));
+        */
     }
 }
 
